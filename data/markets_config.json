@@ -1,0 +1,323 @@
+[
+  {
+    "event_id": "838712",
+    "event_title": "Core CPI YoY - August 2026",
+    "event_slug": "core-cpi-yoy-august-2026-1786474662954",
+    "markets": [
+      {
+        "market_id": "3539694",
+        "question": "Will Core CPI YoY be 2.2% in August?",
+        "condition_id": "0xd9fde4b6d7a94536397780a8442c4127bbb1fbde7391952f9aa2d4fc5450c1fb",
+        "clob_token_ids": [
+          "111676121275560479815032092629002658568108231249985083584239625479278985573489",
+          "98309400924138282485363411115556602785358085861427665678527412271511570096734"
+        ]
+      },
+      {
+        "market_id": "3539695",
+        "question": "Will Core CPI YoY be 2.3% in August?",
+        "condition_id": "0xb58800e6e714dc9defa2ad6a806cc8dac4d944a617c64282a5c7465ecb853d08",
+        "clob_token_ids": [
+          "86606621431270273700128640078368528790326394924599645255138679311415970686557",
+          "80715383029511153404077139921024625445274039955048871500319482506366348472962"
+        ]
+      },
+      {
+        "market_id": "3539696",
+        "question": "Will Core CPI YoY be 2.4% in August?",
+        "condition_id": "0x3d40ba24b8c60586e279dc64324def3f8ee0cf104db498ff13afc4a2aab4d857",
+        "clob_token_ids": [
+          "3324244931924459340017197777196190350809525680236576167575460333391469674350",
+          "63829239813136022926213213239365948979007765208724043287224731394649780472355"
+        ]
+      },
+      {
+        "market_id": "3539697",
+        "question": "Will Core CPI YoY be 2.5% in August?",
+        "condition_id": "0x31bca4b4c04819ec0c603d92836fa68e241353e5eccc33b3f4790b5928708e32",
+        "clob_token_ids": [
+          "81083186130843690472716783839381517106518811667243959907909894323889489750964",
+          "72406712541375347502841445609465958603432594332737699849425339822108232321784"
+        ]
+      },
+      {
+        "market_id": "3539698",
+        "question": "Will Core CPI YoY be 2.6% in August?",
+        "condition_id": "0x1d866e7dda4d027480a70b8f928cf1e264e4e4c521efa24be8e626728d77cefc",
+        "clob_token_ids": [
+          "409883319275249861135947405387971873964557759432218229653363451279890633609",
+          "2430801246794813216703932323635141869187172585578113605334024874609994951260"
+        ]
+      },
+      {
+        "market_id": "3539699",
+        "question": "Will Core CPI YoY be 2.7% in August?",
+        "condition_id": "0x180d79a93fab101366039056595a243f879e0f8682fa40367215131cc6020899",
+        "clob_token_ids": [
+          "45913494438158310417978840280427230519029901535141239400877995181916394474022",
+          "80530329626015649422747434907052281057171048026011443907687641269415054576431"
+        ]
+      },
+      {
+        "market_id": "3539700",
+        "question": "Will Core CPI YoY be 2.8% in August?",
+        "condition_id": "0xf044a58ac146acfcfc5570a45f442540883a4889f659d2d3a8d366abde559d8b",
+        "clob_token_ids": [
+          "110879698781774972992866325873189461697856058841120843660616321861309542986726",
+          "40218267018261180624584302645731645169140812264448273947261855485541390254067"
+        ]
+      },
+      {
+        "market_id": "3539701",
+        "question": "Will Core CPI YoY be 2.9% or more in August?",
+        "condition_id": "0xebe98e62c771f6bbdec956eb11fce5b315c87ade8764849ca865de493401b091",
+        "clob_token_ids": [
+          "17623787495286733512954066819745050156865366971555050423852089822601553865962",
+          "91212306644798169009265916183461752705521238319095976981715718479356296174089"
+        ]
+      },
+      {
+        "market_id": "3539692",
+        "question": "Will Core CPI YoY be 2.0% or less in August?",
+        "condition_id": "0xff6c591be50c08c9238a82fe3e812587cf0e804986436c07bed650564593f02e",
+        "clob_token_ids": [
+          "104330981813137477581739291733438731182936617884228128642861434548302492504283",
+          "90266247259297062748545033747629585931862990639681942757294954153351880792614"
+        ]
+      },
+      {
+        "market_id": "3539693",
+        "question": "Will Core CPI YoY be 2.1% in August?",
+        "condition_id": "0x9e86c2312a3c223cc147552ca99a557329a56155a42ca48e67d1291c045e70dd",
+        "clob_token_ids": [
+          "73061007136179113264644632694527200986080586501925653342798414797635693604417",
+          "109108489759237740686910589938172128386158205146683900223844105959764015887348"
+        ]
+      }
+    ]
+  },
+  {
+    "event_id": "481717",
+    "event_title": "Fed Decision in September?",
+    "event_slug": "fed-decision-in-september-762",
+    "markets": [
+      {
+        "market_id": "2252242",
+        "question": "Will the Fed decrease interest rates by 50+ bps after the September 2026 meeting?",
+        "condition_id": "0x5e464d85eb49f22d876f3ed6168a7db5e2288e9ae1eb91effd2758e994676f86",
+        "clob_token_ids": [
+          "97186030785608128217926542396950266594898339988989015155120280107165449433603",
+          "81470465080656150088482886298356783621062802919110096763062861781139262816347"
+        ]
+      },
+      {
+        "market_id": "2252243",
+        "question": "Will the Fed decrease interest rates by 25 bps after the September 2026 meeting?",
+        "condition_id": "0xac02cbb049e46d6a3627c0fdf52fa554982a9025d45968207b362acb6ca4b830",
+        "clob_token_ids": [
+          "57748138085022719760345772310040703848567377822400132842014290209986511882046",
+          "28239418772633645184924651434956000849078365566842629564562475378531350731731"
+        ]
+      },
+      {
+        "market_id": "2252244",
+        "question": "Will there be no change in Fed interest rates after the September 2026 meeting?",
+        "condition_id": "0xa3b36b2d6104d34af4e6c6215fc818e43352e78a748fbfb0b85e3a35f71dec9a",
+        "clob_token_ids": [
+          "5615282760875985231868508008056959876238536896643315063916840237042205273721",
+          "97050921740416192996389806693742575608111328819185493163189880975611314813724"
+        ]
+      },
+      {
+        "market_id": "2252245",
+        "question": "Will the Fed increase interest rates by 25 bps after the September 2026 meeting?",
+        "condition_id": "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d",
+        "clob_token_ids": [
+          "63842529068710005716169325380315470359047749786610778647370693404952498013178",
+          "2881957189963819690709899387312951271986076905757701114514025622922000576600"
+        ]
+      },
+      {
+        "market_id": "2252246",
+        "question": "Will the Fed increase interest rates by 50+ bps after the September 2026 meeting?",
+        "condition_id": "0x2e4b58fc18dbffd74d5275d89fb076943f21992763c45dcadd81391b83bde13c",
+        "clob_token_ids": [
+          "88912926533493988427719291698947688154042720958310632316541141466409683822293",
+          "74195220586129237349258803179082634542284503538320000637909015632982564961602"
+        ]
+      }
+    ]
+  },
+  {
+    "event_id": "606422",
+    "event_title": "Fed Decision in October?",
+    "event_slug": "fed-decision-in-october-20260617190323537",
+    "markets": [
+      {
+        "market_id": "2589813",
+        "question": "Will the Fed increase interest rates by 25 bps after the October 2026 meeting?",
+        "condition_id": "0x12aa13b3da17ceae1b0a59b5d5b77121e91bb79b4bb0b52bf6543ed3f8d0953b",
+        "clob_token_ids": [
+          "55159722761418013044126414276680602270318000841690689684819994448621694923050",
+          "78632395083310670734315205502061249602319069653915932320155846460019107676757"
+        ]
+      },
+      {
+        "market_id": "2589810",
+        "question": "Will the Fed decrease interest rates by 50+ bps after the October 2026 meeting?",
+        "condition_id": "0xa69ef420d8b4075ad8ba8611d02c63cb2ece46f5c8c643af223c272689b0c96f",
+        "clob_token_ids": [
+          "17010377994663817312158123655937348199252960045746746128731746451645055725586",
+          "61725366781282351729996972759460154434089275036953062948669003249092837754960"
+        ]
+      },
+      {
+        "market_id": "2589812",
+        "question": "Will there be no change in Fed interest rates after the October 2026 meeting?",
+        "condition_id": "0xdf9bf27ee5757c55b44b8b9826ddc9ec3a8809aa3278634c45edbb7fc8f1a3e3",
+        "clob_token_ids": [
+          "111061902544814266207267295505639408607400625795891618462682726460921782993748",
+          "42038775866198212615491650114881818219665139981763207699110491615333273795415"
+        ]
+      },
+      {
+        "market_id": "2589811",
+        "question": "Will the Fed decrease interest rates by 25 bps after the October 2026 meeting?",
+        "condition_id": "0x9cf563d7b55aa9aa876d5d7e55126347eee473f0ae56d799e325fdef2bf25297",
+        "clob_token_ids": [
+          "33268510350568915228897273528353467773422190590579607471427765079749830445947",
+          "110888499829195123034987289109543572302716575133123608254293945182185650232552"
+        ]
+      },
+      {
+        "market_id": "2589814",
+        "question": "Will the Fed increase interest rates by 50+ bps after the October 2026 meeting?",
+        "condition_id": "0xde5d75ab7702875623ba509bc923241e1211da74a113521b3b70ddac930d7316",
+        "clob_token_ids": [
+          "18246296022868501258060085368606280205967114341141276439803424448463050819498",
+          "41864497411878191766967581422432961750808440991174085516384293402629587721839"
+        ]
+      }
+    ]
+  },
+  {
+    "event_id": "770450",
+    "event_title": "Fed Decision in December?",
+    "event_slug": "fed-decision-in-december-20260729232808632",
+    "markets": [
+      {
+        "market_id": "3215006",
+        "question": "Will the Fed decrease interest rates by 25 bps after the December 2026 meeting?",
+        "condition_id": "0xf17ad24eb4ad57926495b114149c765b9b95bc286eadc91cbbfa901ceb10d0b8",
+        "clob_token_ids": [
+          "77367448845023382525249480243608609306658725883285195065573683809293972009019",
+          "23677896678650147625251750117853328843601853501710889530409633595389256242910"
+        ]
+      },
+      {
+        "market_id": "3215005",
+        "question": "Will the Fed decrease interest rates by 50+ bps after the December 2026 meeting?",
+        "condition_id": "0xb9aee520bf51ac5f00b5c43e54ef9245bc9fcdef866ce8a33025f9a441cc651d",
+        "clob_token_ids": [
+          "17640596861394454242836532536014033416733783473450136742726948856144855149507",
+          "104236736263775307891497202874191911203963566711959725788584750440530976742193"
+        ]
+      },
+      {
+        "market_id": "3215007",
+        "question": "Will there be no change in Fed interest rates after the December 2026 meeting?",
+        "condition_id": "0x723822eb2b143cee54c0bd7c1efba322b21f0051984c266df8879c394f1011c0",
+        "clob_token_ids": [
+          "42865728742506860386768556888821101266630139112044622335353850919229585308601",
+          "8077351031134730167836761678618167504307708651130165095377248922919635337796"
+        ]
+      },
+      {
+        "market_id": "3215008",
+        "question": "Will the Fed increase interest rates by 25 bps after the December 2026 meeting?",
+        "condition_id": "0x8a4196617dcb703e49d9bb36d3847bf6a75fd364dbd19f8d408ac944bf1a03d8",
+        "clob_token_ids": [
+          "111662129652828266889360374468657435151479595863413519836161861837506140152890",
+          "94483965432909797688470702512207472940215538148754820061518518664128018848687"
+        ]
+      },
+      {
+        "market_id": "3215009",
+        "question": "Will the Fed increase interest rates by 50+ bps after the December 2026 meeting?",
+        "condition_id": "0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e",
+        "clob_token_ids": [
+          "35090254409399344650860070211816464534198960801264823587796928404808383727584",
+          "17037715451587457598270390992151934195448806241696976473961259598235638233970"
+        ]
+      }
+    ]
+  },
+  {
+    "event_id": "770451",
+    "event_title": "Fed Decision in January?",
+    "event_slug": "fed-decision-in-january-20260729233815502",
+    "markets": [
+      {
+        "market_id": "3215010",
+        "question": "Will the Fed decrease interest rates by 50+ bps after the January 2027 meeting?",
+        "condition_id": "0xfd0fb47daa40f79ed1bd8a0645d028c4583391b70860e4447f93b3b9fe797865",
+        "clob_token_ids": [
+          "45053521911672808043600263178798111402897730682087979734684574823004307023433",
+          "54892629532396715672060844552184409083592827625930470370999146720346626910259"
+        ]
+      },
+      {
+        "market_id": "3215011",
+        "question": "Will the Fed decrease interest rates by 25 bps after the January 2027 meeting?",
+        "condition_id": "0x0bbe79a986a3f84ea82ebe714159fcfaa488f80df878599e2cd9297ea57ee60f",
+        "clob_token_ids": [
+          "55531205670373260499988385930313327116586167390725681551489621136380793885916",
+          "109592678904810057002493483716660995296395997473352977641574408716547799045975"
+        ]
+      },
+      {
+        "market_id": "3215012",
+        "question": "Will there be no change in Fed interest rates after the January 2027 meeting?",
+        "condition_id": "0xf6e7c89ec4b5d3c887ed9b70dfbcac9392e287367783ce475d32e8c16ed9f61c",
+        "clob_token_ids": [
+          "63563009510989471204377539732457086916124654411092982704760023438039220215330",
+          "36342864926284644003283595741257595655709757799681943153551982143131732331338"
+        ]
+      },
+      {
+        "market_id": "3215013",
+        "question": "Will the Fed increase interest rates by 25 bps after the January 2027 meeting?",
+        "condition_id": "0x50642b28be893e8752649e9ae6d687558fc5dcfeeecd10713cf59ef6ea0edce4",
+        "clob_token_ids": [
+          "58421987972100586826330616250690474504359298033602990223828098109695719571344",
+          "63396423986062034636625373404202970920080078602349826866595954726582462497358"
+        ]
+      },
+      {
+        "market_id": "3215014",
+        "question": "Will the Fed increase interest rates by 50+ bps after the January 2027 meeting?",
+        "condition_id": "0x21cd6160d9de634104b719d50afa4a8ebfa3d0cd10609bf752c77b66f7bbd6a7",
+        "clob_token_ids": [
+          "42452047366442275682382090045397807109079755041679563479952649068752467853296",
+          "98510419442387454895805766707264980500719881328500989992133076060209252362108"
+        ]
+      }
+    ]
+  },
+  {
+    "event_id": "101936",
+    "event_title": "Fed rate hike in 2026?",
+    "event_slug": "fed-rate-hike-in-2026",
+    "markets": [
+      {
+        "market_id": "908713",
+        "question": "Fed rate hike in 2026?",
+        "condition_id": "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b",
+        "clob_token_ids": [
+          "75028752776148090296091099469912621384650554615761384992997579209329182670110",
+          "93005850938352995663334573245996733794924636935158112548608169054144721737755"
+        ]
+      }
+    ]
+  }
+]

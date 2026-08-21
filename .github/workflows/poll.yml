@@ -1,0 +1,36 @@
+name: poll-market-data
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes -- see README note on interval/minutes tradeoff
+  workflow_dispatch: {}       # lets you trigger a run manually from the Actions tab
+
+concurrency:
+  group: poll-market-data
+  cancel-in-progress: false   # never kill a poll mid-run; just let the next schedule skip if still busy
+
+permissions:
+  contents: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - run: python scripts/poll_snapshot.py --out-dir data/live
+
+      - name: Commit collected data
+        run: |
+          git config user.name "poller-bot"
+          git config user.email "poller-bot@users.noreply.github.com"
+          git add data/live
+          git diff --cached --quiet || git commit -m "poll: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
