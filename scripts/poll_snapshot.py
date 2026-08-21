@@ -45,7 +45,7 @@ DATA_API_TRADES_URL = "https://data-api.polymarket.com/trades"
 DEFAULT_TRADE_LOOKBACK_SECONDS = 1800  # first-ever run: how far back to backfill trades
 
 QUOTE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "best_bid", "best_ask", "bid_size", "ask_size", "spread"]
-TRADE_FIELDS = ["timestamp", "recv_time", "market", "asset", "price", "size", "side"]
+TRADE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "price", "size", "side"]
 VIOLATION_FIELDS = [
     "start_time_iso", "end_time_iso", "duration_seconds", "constraint_name", "constraint_type",
     "market_ids", "num_observations", "start_magnitude", "max_magnitude", "mean_magnitude",
@@ -158,7 +158,7 @@ def main():
                     "timestamp": trade.get("timestamp"),
                     "recv_time": recv_time,
                     "market": trade.get("conditionId", market_id),
-                    "asset": trade.get("asset"),
+                    "asset_id": trade.get("asset"),
                     "price": trade.get("price"),
                     "size": trade.get("size"),
                     "side": trade.get("side"),
