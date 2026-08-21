@@ -17,7 +17,8 @@
         "0x9e86c2312a3c223cc147552ca99a557329a56155a42ca48e67d1291c045e70dd"
       ],
       "magnitudes": [
-        0.1175
+        0.1175,
+        0.12
       ]
     },
     "fed-decision-in-december-20260729232808632|0xf17ad24eb4ad57926495b114149c765b9b95bc286eadc91cbbfa901ceb10d0b8|0xb9aee520bf51ac5f00b5c43e54ef9245bc9fcdef866ce8a33025f9a441cc651d|0x723822eb2b143cee54c0bd7c1efba322b21f0051984c266df8879c394f1011c0|0x8a4196617dcb703e49d9bb36d3847bf6a75fd364dbd19f8d408ac944bf1a03d8|0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e": {
@@ -32,9 +33,10 @@
         "0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e"
       ],
       "magnitudes": [
+        0.0305,
         0.0305
       ]
     }
   },
-  "last_trade_poll_epoch": 1787320181
+  "last_trade_poll_epoch": 1787320946
 }
