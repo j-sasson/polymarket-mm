@@ -8,7 +8,12 @@ Each invocation:
   2. Appends a quotes.csv row per market.
   3. Runs the same constraint checker used by the live collector, with the
      violation tracker's open-episode state persisted to poll_state.json so
-     episodes still span across separate invocations correctly.
+     episodes still span across separate invocations correctly. This is a
+     midpoint-based statistical signal -- see violations.csv.
+  3b. Separately runs pmm_data.executable_arbitrage against the real best
+      bid/ask on each leg -- only fires when there's actual money on the
+      table net of crossing the spread, not just a midpoint drifting off 1
+      because of wide, illiquid order books. See arbitrage.csv.
   4. Fetches any new trades since the last poll (data-api, also public) and
      appends them to trades.csv.
 
@@ -37,12 +42,14 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pmm_data.csv_logger import CsvLogger  # noqa: E402
+from pmm_data.executable_arbitrage import check_executable_arbitrage  # noqa: E402
 from pmm_data.market_graph import asset_to_market_map, build_constraint_set, load_config  # noqa: E402
 from pmm_data.violation_tracker import ViolationTracker  # noqa: E402
 
 CLOB_BOOK_URL = "https://clob.polymarket.com/book"
 DATA_API_TRADES_URL = "https://data-api.polymarket.com/trades"
 DEFAULT_TRADE_LOOKBACK_SECONDS = 1800  # first-ever run: how far back to backfill trades
+DEFAULT_MIN_ARB_PROFIT = 0.01  # 1% floor -- rough guard against flagging fee-losing edges as if they were free money
 
 QUOTE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "best_bid", "best_ask", "bid_size", "ask_size", "spread"]
 TRADE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "price", "size", "side"]
@@ -51,6 +58,7 @@ VIOLATION_FIELDS = [
     "market_ids", "num_observations", "start_magnitude", "max_magnitude", "mean_magnitude",
     "end_magnitude", "resolved",
 ]
+ARBITRAGE_FIELDS = ["time_iso", "constraint_name", "constraint_type", "market_ids", "profit_per_set", "detail"]
 
 
 def now_iso() -> str:
@@ -92,6 +100,8 @@ def violation_record_to_row(record: dict) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out-dir", default="data/live")
+    parser.add_argument("--min-arb-profit", type=float, default=DEFAULT_MIN_ARB_PROFIT,
+                         help="minimum $ profit per complete set (before fees) to log as executable arbitrage")
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
@@ -105,6 +115,7 @@ def main():
     quote_log = CsvLogger(out_dir / "quotes.csv", QUOTE_FIELDS)
     trade_log = CsvLogger(out_dir / "trades.csv", TRADE_FIELDS)
     violation_log = CsvLogger(out_dir / "violations.csv", VIOLATION_FIELDS)
+    arbitrage_log = CsvLogger(out_dir / "arbitrage.csv", ARBITRAGE_FIELDS)
 
     state = json.loads(state_path.read_text()) if state_path.exists() else {}
     tracker = ViolationTracker(
@@ -116,6 +127,7 @@ def main():
     now_ts = time.time()
     recv_time = now_iso()
     current_prices: dict[str, float] = {}
+    books: dict[str, tuple[float, float]] = {}
     ok_count, err_count = 0, 0
 
     for token_id, market_id in asset_to_market.items():
@@ -137,12 +149,24 @@ def main():
                 "spread": round(float(best_ask) - float(best_bid), 6),
             })
             current_prices[market_id] = (float(best_bid) + float(best_ask)) / 2
+            books[market_id] = (float(best_bid), float(best_ask))
             ok_count += 1
         except Exception as exc:
             print(f"warn: book fetch failed for asset {token_id} ({market_id}): {exc}", file=sys.stderr)
             err_count += 1
 
     tracker.update(current_prices, now_ts)
+
+    arbs = check_executable_arbitrage(constraint_set, books, min_profit=args.min_arb_profit)
+    for arb in arbs:
+        arbitrage_log.write({
+            "time_iso": recv_time,
+            "constraint_name": arb.constraint_name,
+            "constraint_type": arb.constraint_type,
+            "market_ids": "|".join(arb.market_ids),
+            "profit_per_set": arb.profit_per_set,
+            "detail": arb.detail,
+        })
 
     trade_count = 0
     for market_id in set(asset_to_market.values()):
@@ -176,9 +200,10 @@ def main():
     quote_log.close()
     trade_log.close()
     violation_log.close()
+    arbitrage_log.close()
 
     print(f"[{recv_time}] polled {ok_count} markets ok, {err_count} failed, {trade_count} new trades, "
-          f"{len(tracker.export_state())} violation episode(s) currently open")
+          f"{len(tracker.export_state())} violation episode(s) currently open, {len(arbs)} executable arb(s) found")
 
 
 if __name__ == "__main__":
