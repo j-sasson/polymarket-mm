@@ -61,7 +61,8 @@
         0.1275,
         0.1205,
         0.111,
-        0.103
+        0.103,
+        0.1155
       ]
     },
     "fed-decision-in-december-20260729232808632|0xf17ad24eb4ad57926495b114149c765b9b95bc286eadc91cbbfa901ceb10d0b8|0xb9aee520bf51ac5f00b5c43e54ef9245bc9fcdef866ce8a33025f9a441cc651d|0x723822eb2b143cee54c0bd7c1efba322b21f0051984c266df8879c394f1011c0|0x8a4196617dcb703e49d9bb36d3847bf6a75fd364dbd19f8d408ac944bf1a03d8|0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e": {
@@ -78,24 +79,10 @@
       "magnitudes": [
         0.0325,
         0.0295,
-        0.0405
-      ]
-    },
-    "fed-decision-in-january-20260729233815502|0xfd0fb47daa40f79ed1bd8a0645d028c4583391b70860e4447f93b3b9fe797865|0x0bbe79a986a3f84ea82ebe714159fcfaa488f80df878599e2cd9297ea57ee60f|0xf6e7c89ec4b5d3c887ed9b70dfbcac9392e287367783ce475d32e8c16ed9f61c|0x50642b28be893e8752649e9ae6d687558fc5dcfeeecd10713cf59ef6ea0edce4|0x21cd6160d9de634104b719d50afa4a8ebfa3d0cd10609bf752c77b66f7bbd6a7": {
-      "start_time": 1787411775.69203,
-      "constraint_name": "fed-decision-in-january-20260729233815502",
-      "constraint_type": "negative_risk",
-      "market_ids": [
-        "0xfd0fb47daa40f79ed1bd8a0645d028c4583391b70860e4447f93b3b9fe797865",
-        "0x0bbe79a986a3f84ea82ebe714159fcfaa488f80df878599e2cd9297ea57ee60f",
-        "0xf6e7c89ec4b5d3c887ed9b70dfbcac9392e287367783ce475d32e8c16ed9f61c",
-        "0x50642b28be893e8752649e9ae6d687558fc5dcfeeecd10713cf59ef6ea0edce4",
-        "0x21cd6160d9de634104b719d50afa4a8ebfa3d0cd10609bf752c77b66f7bbd6a7"
-      ],
-      "magnitudes": [
-        0.0205
+        0.0405,
+        0.041
       ]
     }
   },
-  "last_trade_poll_epoch": 1787411775
+  "last_trade_poll_epoch": 1787413492
 }
