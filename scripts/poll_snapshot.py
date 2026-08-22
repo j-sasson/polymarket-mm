@@ -42,7 +42,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pmm_data.csv_logger import CsvLogger  # noqa: E402
-from pmm_data.executable_arbitrage import check_executable_arbitrage  # noqa: E402
+from pmm_data.executable_arbitrage import BookTop, check_executable_arbitrage  # noqa: E402
 from pmm_data.market_graph import asset_to_market_map, build_constraint_set, load_config  # noqa: E402
 from pmm_data.violation_tracker import ViolationTracker  # noqa: E402
 
@@ -58,7 +58,10 @@ VIOLATION_FIELDS = [
     "market_ids", "num_observations", "start_magnitude", "max_magnitude", "mean_magnitude",
     "end_magnitude", "resolved",
 ]
-ARBITRAGE_FIELDS = ["time_iso", "constraint_name", "constraint_type", "market_ids", "profit_per_set", "detail"]
+ARBITRAGE_FIELDS = [
+    "time_iso", "constraint_name", "constraint_type", "market_ids",
+    "profit_per_set", "max_size", "total_profit", "detail",
+]
 
 
 def now_iso() -> str:
@@ -102,6 +105,9 @@ def main():
     parser.add_argument("--out-dir", default="data/live")
     parser.add_argument("--min-arb-profit", type=float, default=DEFAULT_MIN_ARB_PROFIT,
                          help="minimum $ profit per complete set (before fees) to log as executable arbitrage")
+    parser.add_argument("--min-arb-total-profit", type=float, default=0.0,
+                         help="minimum total $ profit (per-set profit x depth-capped size) to log -- "
+                              "0 logs everything that clears --min-arb-profit, however small in size")
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
@@ -127,7 +133,7 @@ def main():
     now_ts = time.time()
     recv_time = now_iso()
     current_prices: dict[str, float] = {}
-    books: dict[str, tuple[float, float]] = {}
+    books: dict[str, BookTop] = {}
     ok_count, err_count = 0, 0
 
     for token_id, market_id in asset_to_market.items():
@@ -149,7 +155,7 @@ def main():
                 "spread": round(float(best_ask) - float(best_bid), 6),
             })
             current_prices[market_id] = (float(best_bid) + float(best_ask)) / 2
-            books[market_id] = (float(best_bid), float(best_ask))
+            books[market_id] = BookTop(float(best_bid), float(bid_size), float(best_ask), float(ask_size))
             ok_count += 1
         except Exception as exc:
             print(f"warn: book fetch failed for asset {token_id} ({market_id}): {exc}", file=sys.stderr)
@@ -157,7 +163,9 @@ def main():
 
     tracker.update(current_prices, now_ts)
 
-    arbs = check_executable_arbitrage(constraint_set, books, min_profit=args.min_arb_profit)
+    arbs = check_executable_arbitrage(
+        constraint_set, books, min_profit=args.min_arb_profit, min_total_profit=args.min_arb_total_profit,
+    )
     for arb in arbs:
         arbitrage_log.write({
             "time_iso": recv_time,
@@ -165,6 +173,8 @@ def main():
             "constraint_type": arb.constraint_type,
             "market_ids": "|".join(arb.market_ids),
             "profit_per_set": arb.profit_per_set,
+            "max_size": arb.max_size,
+            "total_profit": arb.total_profit,
             "detail": arb.detail,
         })
 
