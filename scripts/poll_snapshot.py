@@ -10,6 +10,12 @@ Each invocation:
      violation tracker's open-episode state persisted to poll_state.json so
      episodes still span across separate invocations correctly. This is a
      midpoint-based statistical signal -- see violations.csv.
+  3c. Also runs pmm_data.difference_graph -- a Floyd-Warshall closure over
+      the monotone constraints -- to catch violations of BOUNDS DERIVED
+      FROM CHAINS of constraints, not just the pairs we hand-wrote. Uses
+      its own ViolationTracker instance (same episode-tracking machinery,
+      separate persisted state) and logs into the same violations.csv
+      (constraint_type="derived_monotone" distinguishes these rows).
   3b. Separately runs pmm_data.executable_arbitrage against the real best
       bid/ask on each leg AND each token's real taker fee rate (GET
       /fee-rate) -- only fires when there's actual money on the table net
@@ -47,6 +53,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pmm_data.csv_logger import CsvLogger  # noqa: E402
+from pmm_data.difference_graph import DerivedBoundChecker  # noqa: E402
 from pmm_data.executable_arbitrage import BookTop, check_executable_arbitrage  # noqa: E402
 from pmm_data.market_graph import (  # noqa: E402
     NO_SUFFIX,
@@ -170,6 +177,13 @@ def main():
         constraint_set, on_episode_closed=lambda record: violation_log.write(violation_record_to_row(record)),
     )
     tracker.load_state(state.get("tracker_open_episodes", {}))
+
+    derived_tracker = ViolationTracker(
+        DerivedBoundChecker(constraint_set, min_hops=2),
+        on_episode_closed=lambda record: violation_log.write(violation_record_to_row(record)),
+    )
+    derived_tracker.load_state(state.get("derived_tracker_open_episodes", {}))
+
     last_trade_poll = state.get("last_trade_poll_epoch", int(time.time()) - DEFAULT_TRADE_LOOKBACK_SECONDS)
 
     now_ts = time.time()
@@ -222,6 +236,7 @@ def main():
             no_err_count += 1
 
     tracker.update(current_prices, now_ts)
+    derived_tracker.update(current_prices, now_ts)  # same prices, checked against chain-derived bounds
 
     arbs = check_executable_arbitrage(
         constraint_set, books, min_profit=args.min_arb_profit, min_total_profit=args.min_arb_total_profit,
@@ -268,6 +283,7 @@ def main():
 
     state = {
         "tracker_open_episodes": tracker.export_state(),
+        "derived_tracker_open_episodes": derived_tracker.export_state(),
         "last_trade_poll_epoch": int(now_ts),
     }
     state_path.write_text(json.dumps(state, indent=2))
@@ -279,7 +295,8 @@ def main():
 
     print(f"[{recv_time}] polled {ok_count} YES books ok ({err_count} failed), "
           f"{no_ok_count} NO books ok ({no_err_count} failed), {trade_count} new trades, "
-          f"{len(tracker.export_state())} violation episode(s) currently open, "
+          f"{len(tracker.export_state())} violation episode(s) + {len(derived_tracker.export_state())} "
+          f"derived episode(s) currently open, "
           f"{len(arbs)} cross-market arb(s), {len(yes_no_arbs)} yes/no-pair arb(s) found")
 
 
