@@ -81,7 +81,7 @@ def build_summary(live_dir: Path) -> str:
         lines.append("None completed yet.")
 
     lines.append("")
-    lines.append("=== Executable arbitrage (real bid/ask, size-capped, before fees) ===")
+    lines.append("=== Executable arbitrage (real bid/ask, size-capped, NET of Polymarket's real taker fee) ===")
     arb_path = live_dir / "arbitrage.csv"
     if arb_path.exists() and arb_path.stat().st_size > 0:
         a = pd.read_csv(arb_path)

@@ -11,9 +11,10 @@ Each invocation:
      episodes still span across separate invocations correctly. This is a
      midpoint-based statistical signal -- see violations.csv.
   3b. Separately runs pmm_data.executable_arbitrage against the real best
-      bid/ask on each leg -- only fires when there's actual money on the
-      table net of crossing the spread, not just a midpoint drifting off 1
-      because of wide, illiquid order books. See arbitrage.csv.
+      bid/ask on each leg AND each token's real taker fee rate (GET
+      /fee-rate) -- only fires when there's actual money on the table net
+      of crossing the spread AND net of the fee you'd actually pay to do
+      it. See arbitrage.csv.
   4. Fetches any new trades since the last poll (data-api, also public) and
      appends them to trades.csv.
 
@@ -47,9 +48,12 @@ from pmm_data.market_graph import asset_to_market_map, build_constraint_set, loa
 from pmm_data.violation_tracker import ViolationTracker  # noqa: E402
 
 CLOB_BOOK_URL = "https://clob.polymarket.com/book"
+CLOB_FEE_RATE_URL = "https://clob.polymarket.com/fee-rate"
 DATA_API_TRADES_URL = "https://data-api.polymarket.com/trades"
 DEFAULT_TRADE_LOOKBACK_SECONDS = 1800  # first-ever run: how far back to backfill trades
-DEFAULT_MIN_ARB_PROFIT = 0.01  # 1% floor -- rough guard against flagging fee-losing edges as if they were free money
+DEFAULT_MIN_ARB_PROFIT = 0.0  # arbitrage's own net-of-fee floor now does the real filtering; this just excludes exact zero
+FEE_RATE_FETCH_FAILURE_FALLBACK = 0.10  # conservative (highest real rate observed), NOT 0 -- a failed fetch must never
+                                          # silently make a fee-losing trade look free
 
 QUOTE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "best_bid", "best_ask", "bid_size", "ask_size", "spread"]
 TRADE_FIELDS = ["timestamp", "recv_time", "market", "asset_id", "price", "size", "side"]
@@ -60,7 +64,7 @@ VIOLATION_FIELDS = [
 ]
 ARBITRAGE_FIELDS = [
     "time_iso", "constraint_name", "constraint_type", "market_ids",
-    "profit_per_set", "max_size", "total_profit", "detail",
+    "gross_profit_per_set", "fee_per_set", "profit_per_set", "max_size", "total_profit", "detail",
 ]
 
 
@@ -81,6 +85,14 @@ def top_of_book(book: dict):
     best_bid = max(bids, key=lambda b: float(b["price"]))
     best_ask = min(asks, key=lambda a: float(a["price"]))
     return best_bid["price"], best_bid["size"], best_ask["price"], best_ask["size"]
+
+
+def fetch_taker_fee_rate(token_id: str) -> float:
+    """GET /fee-rate returns {"base_fee": <bps>}. Observed to vary by
+    market when checked against real data -- do not assume a fixed rate."""
+    resp = requests.get(CLOB_FEE_RATE_URL, params={"token_id": token_id}, timeout=15)
+    resp.raise_for_status()
+    return resp.json().get("base_fee", 0) / 10000.0
 
 
 def violation_record_to_row(record: dict) -> dict:
@@ -155,7 +167,14 @@ def main():
                 "spread": round(float(best_ask) - float(best_bid), 6),
             })
             current_prices[market_id] = (float(best_bid) + float(best_ask)) / 2
-            books[market_id] = BookTop(float(best_bid), float(bid_size), float(best_ask), float(ask_size))
+            try:
+                fee_rate = fetch_taker_fee_rate(token_id)
+            except Exception as fee_exc:
+                print(f"warn: fee-rate fetch failed for asset {token_id} ({market_id}): {fee_exc}", file=sys.stderr)
+                fee_rate = FEE_RATE_FETCH_FAILURE_FALLBACK
+            books[market_id] = BookTop(
+                float(best_bid), float(bid_size), float(best_ask), float(ask_size), taker_fee_rate=fee_rate,
+            )
             ok_count += 1
         except Exception as exc:
             print(f"warn: book fetch failed for asset {token_id} ({market_id}): {exc}", file=sys.stderr)
@@ -172,6 +191,8 @@ def main():
             "constraint_name": arb.constraint_name,
             "constraint_type": arb.constraint_type,
             "market_ids": "|".join(arb.market_ids),
+            "gross_profit_per_set": arb.gross_profit_per_set,
+            "fee_per_set": arb.fee_per_set,
             "profit_per_set": arb.profit_per_set,
             "max_size": arb.max_size,
             "total_profit": arb.total_profit,
