@@ -115,7 +115,8 @@
         0.1095,
         0.1295,
         0.107,
-        0.111
+        0.111,
+        0.1075
       ]
     },
     "fed-decision-in-december-20260729232808632|0xf17ad24eb4ad57926495b114149c765b9b95bc286eadc91cbbfa901ceb10d0b8|0xb9aee520bf51ac5f00b5c43e54ef9245bc9fcdef866ce8a33025f9a441cc651d|0x723822eb2b143cee54c0bd7c1efba322b21f0051984c266df8879c394f1011c0|0x8a4196617dcb703e49d9bb36d3847bf6a75fd364dbd19f8d408ac944bf1a03d8|0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e": {
@@ -186,7 +187,8 @@
         0.03,
         0.0305,
         0.029,
-        0.029
+        0.029,
+        0.026
       ]
     },
     "fed-decision-in-october-20260617190323537|0x12aa13b3da17ceae1b0a59b5d5b77121e91bb79b4bb0b52bf6543ed3f8d0953b|0xa69ef420d8b4075ad8ba8611d02c63cb2ece46f5c8c643af223c272689b0c96f|0xdf9bf27ee5757c55b44b8b9826ddc9ec3a8809aa3278634c45edbb7fc8f1a3e3|0x9cf563d7b55aa9aa876d5d7e55126347eee473f0ae56d799e325fdef2bf25297|0xde5d75ab7702875623ba509bc923241e1211da74a113521b3b70ddac930d7316": {
@@ -253,7 +255,8 @@
         0.0235,
         0.0235,
         0.0235,
-        0.0235
+        0.0235,
+        0.0245
       ]
     },
     "fed-decision-in-january-20260729233815502|0xfd0fb47daa40f79ed1bd8a0645d028c4583391b70860e4447f93b3b9fe797865|0x0bbe79a986a3f84ea82ebe714159fcfaa488f80df878599e2cd9297ea57ee60f|0xf6e7c89ec4b5d3c887ed9b70dfbcac9392e287367783ce475d32e8c16ed9f61c|0x50642b28be893e8752649e9ae6d687558fc5dcfeeecd10713cf59ef6ea0edce4|0x21cd6160d9de634104b719d50afa4a8ebfa3d0cd10609bf752c77b66f7bbd6a7": {
@@ -275,10 +278,11 @@
         0.0315,
         0.0325,
         0.032,
-        0.0335
+        0.0335,
+        0.0345
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1787510279
+  "last_trade_poll_epoch": 1787511787
 }
