@@ -14,7 +14,11 @@ Each invocation:
       bid/ask on each leg AND each token's real taker fee rate (GET
       /fee-rate) -- only fires when there's actual money on the table net
       of crossing the spread AND net of the fee you'd actually pay to do
-      it. See arbitrage.csv.
+      it. See arbitrage.csv. This runs twice: once across cross-market
+      groups/monotone pairs (build_constraint_set), and once per-market on
+      each market's own YES/NO pair (build_yes_no_constraint_set) -- the
+      latter needs the NO token's book too, which nothing in this project
+      fetched before now.
   4. Fetches any new trades since the last poll (data-api, also public) and
      appends them to trades.csv.
 
@@ -44,7 +48,15 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pmm_data.csv_logger import CsvLogger  # noqa: E402
 from pmm_data.executable_arbitrage import BookTop, check_executable_arbitrage  # noqa: E402
-from pmm_data.market_graph import asset_to_market_map, build_constraint_set, load_config  # noqa: E402
+from pmm_data.market_graph import (  # noqa: E402
+    NO_SUFFIX,
+    YES_SUFFIX,
+    asset_to_market_map,
+    build_constraint_set,
+    build_yes_no_constraint_set,
+    load_config,
+    yes_no_token_ids,
+)
 from pmm_data.violation_tracker import ViolationTracker  # noqa: E402
 
 CLOB_BOOK_URL = "https://clob.polymarket.com/book"
@@ -95,6 +107,22 @@ def fetch_taker_fee_rate(token_id: str) -> float:
     return resp.json().get("base_fee", 0) / 10000.0
 
 
+def fetch_book_top(token_id: str) -> tuple[dict, BookTop] | None:
+    """Fetches a token's book + real taker fee rate together. Returns
+    (raw_book, BookTop) or None if the book is empty (no bids/asks yet)."""
+    book = fetch_book(token_id)
+    top = top_of_book(book)
+    if top is None:
+        return None
+    best_bid, bid_size, best_ask, ask_size = top
+    try:
+        fee_rate = fetch_taker_fee_rate(token_id)
+    except Exception as fee_exc:
+        print(f"warn: fee-rate fetch failed for asset {token_id}: {fee_exc}", file=sys.stderr)
+        fee_rate = FEE_RATE_FETCH_FAILURE_FALLBACK
+    return book, BookTop(float(best_bid), float(bid_size), float(best_ask), float(ask_size), taker_fee_rate=fee_rate)
+
+
 def violation_record_to_row(record: dict) -> dict:
     return {
         "start_time_iso": datetime.fromtimestamp(record["start_time"], tz=timezone.utc).isoformat(),
@@ -129,6 +157,8 @@ def main():
     config_data = load_config()
     asset_to_market = asset_to_market_map(config_data)
     constraint_set = build_constraint_set(config_data)
+    yes_no_constraint_set = build_yes_no_constraint_set(config_data)
+    yes_no_tokens = yes_no_token_ids(config_data)
 
     quote_log = CsvLogger(out_dir / "quotes.csv", QUOTE_FIELDS)
     trade_log = CsvLogger(out_dir / "trades.csv", TRADE_FIELDS)
@@ -146,46 +176,60 @@ def main():
     recv_time = now_iso()
     current_prices: dict[str, float] = {}
     books: dict[str, BookTop] = {}
+    books_yes_no: dict[str, BookTop] = {}
     ok_count, err_count = 0, 0
+
+    def log_quote(token_id: str, market_id: str, book: dict, top: BookTop):
+        quote_log.write({
+            "timestamp": book.get("timestamp", int(now_ts * 1000)),
+            "recv_time": recv_time,
+            "market": market_id,
+            "asset_id": token_id,
+            "best_bid": top.best_bid,
+            "best_ask": top.best_ask,
+            "bid_size": top.bid_size,
+            "ask_size": top.ask_size,
+            "spread": round(top.best_ask - top.best_bid, 6),
+        })
 
     for token_id, market_id in asset_to_market.items():
         try:
-            book = fetch_book(token_id)
-            top = top_of_book(book)
-            if top is None:
+            result = fetch_book_top(token_id)
+            if result is None:
                 continue
-            best_bid, bid_size, best_ask, ask_size = top
-            quote_log.write({
-                "timestamp": book.get("timestamp", int(now_ts * 1000)),
-                "recv_time": recv_time,
-                "market": market_id,
-                "asset_id": token_id,
-                "best_bid": best_bid,
-                "best_ask": best_ask,
-                "bid_size": bid_size,
-                "ask_size": ask_size,
-                "spread": round(float(best_ask) - float(best_bid), 6),
-            })
-            current_prices[market_id] = (float(best_bid) + float(best_ask)) / 2
-            try:
-                fee_rate = fetch_taker_fee_rate(token_id)
-            except Exception as fee_exc:
-                print(f"warn: fee-rate fetch failed for asset {token_id} ({market_id}): {fee_exc}", file=sys.stderr)
-                fee_rate = FEE_RATE_FETCH_FAILURE_FALLBACK
-            books[market_id] = BookTop(
-                float(best_bid), float(bid_size), float(best_ask), float(ask_size), taker_fee_rate=fee_rate,
-            )
+            book, top = result
+            log_quote(token_id, market_id, book, top)
+            current_prices[market_id] = (top.best_bid + top.best_ask) / 2
+            books[market_id] = top
+            books_yes_no[f"{market_id}{YES_SUFFIX}"] = top  # reuse -- no second fetch needed for the YES side
             ok_count += 1
         except Exception as exc:
             print(f"warn: book fetch failed for asset {token_id} ({market_id}): {exc}", file=sys.stderr)
             err_count += 1
+
+    no_ok_count, no_err_count = 0, 0
+    for market_id, (_, no_token_id) in yes_no_tokens.items():
+        try:
+            result = fetch_book_top(no_token_id)
+            if result is None:
+                continue
+            book, top = result
+            log_quote(no_token_id, market_id, book, top)
+            books_yes_no[f"{market_id}{NO_SUFFIX}"] = top
+            no_ok_count += 1
+        except Exception as exc:
+            print(f"warn: NO-token book fetch failed for asset {no_token_id} ({market_id}): {exc}", file=sys.stderr)
+            no_err_count += 1
 
     tracker.update(current_prices, now_ts)
 
     arbs = check_executable_arbitrage(
         constraint_set, books, min_profit=args.min_arb_profit, min_total_profit=args.min_arb_total_profit,
     )
-    for arb in arbs:
+    yes_no_arbs = check_executable_arbitrage(
+        yes_no_constraint_set, books_yes_no, min_profit=args.min_arb_profit, min_total_profit=args.min_arb_total_profit,
+    )
+    for arb in arbs + yes_no_arbs:
         arbitrage_log.write({
             "time_iso": recv_time,
             "constraint_name": arb.constraint_name,
@@ -233,8 +277,10 @@ def main():
     violation_log.close()
     arbitrage_log.close()
 
-    print(f"[{recv_time}] polled {ok_count} markets ok, {err_count} failed, {trade_count} new trades, "
-          f"{len(tracker.export_state())} violation episode(s) currently open, {len(arbs)} executable arb(s) found")
+    print(f"[{recv_time}] polled {ok_count} YES books ok ({err_count} failed), "
+          f"{no_ok_count} NO books ok ({no_err_count} failed), {trade_count} new trades, "
+          f"{len(tracker.export_state())} violation episode(s) currently open, "
+          f"{len(arbs)} cross-market arb(s), {len(yes_no_arbs)} yes/no-pair arb(s) found")
 
 
 if __name__ == "__main__":

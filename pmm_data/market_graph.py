@@ -37,6 +37,37 @@ def market_question_lookup(config: list[dict]) -> dict[str, str]:
     return {m["condition_id"]: m["question"] for e in config for m in e["markets"]}
 
 
+def yes_no_token_ids(config: list[dict]) -> dict[str, tuple[str, str]]:
+    """condition_id -> (yes_token_id, no_token_id)."""
+    return {m["condition_id"]: (m["clob_token_ids"][0], m["clob_token_ids"][1]) for e in config for m in e["markets"]}
+
+
+YES_SUFFIX = "__YES"
+NO_SUFFIX = "__NO"
+
+
+def build_yes_no_constraint_set(config: list[dict]) -> ConstraintSet:
+    """Every single tracked market's own YES/NO pair, as its own trivial
+    2-outcome negative-risk group: exactly one of them resolves true, so
+    their prices must sum to 1. Every other constraint set in this project
+    only ever reasons about the YES side of a market against OTHER
+    markets' YES sides -- this is the one check that looks within a single
+    market, and it's never been run before now.
+
+    Group/market ids here are synthetic (condition_id + "__YES"/"__NO"),
+    not real condition_ids, since a single market now needs two prices
+    instead of one -- keep this ConstraintSet's inputs/outputs separate
+    from build_constraint_set's (don't mix the two id spaces)."""
+    groups = []
+    for event in config:
+        for m in event["markets"]:
+            groups.append(NegativeRiskGroup(
+                name=f"{m['condition_id']}__yes_no",
+                market_ids=(f"{m['condition_id']}{YES_SUFFIX}", f"{m['condition_id']}{NO_SUFFIX}"),
+            ))
+    return ConstraintSet(negative_risk_groups=groups)
+
+
 def build_constraint_set(config: list[dict]) -> ConstraintSet:
     groups = []
     for event in config:
