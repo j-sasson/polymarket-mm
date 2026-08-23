@@ -22,6 +22,23 @@ DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "markets
 FED_YEARLY_HIKE_EVENT_ID = "101936"
 FED_MEETING_EVENT_IDS_IN_2026 = ("481717", "606422", "770450")  # Sep/Oct/Dec 2026
 
+# "Fed rate hike by <Month> 2026 Meeting?" markets are CUMULATIVE ("has a
+# hike happened by this point"), not mutually exclusive outcomes of one
+# event -- a hike by September implies a hike by October too. Must be
+# excluded from the negative-risk grouping loop below (which assumes every
+# multi-market event is a set of mutually exclusive outcomes) and wired in
+# as a monotone chain instead: meeting bucket -> hike-by-that-month ->
+# hike-by-the-next-tracked-month -> hike-in-2026. This creates the first
+# genuine multi-hop chain in the graph -- e.g. "hike at the September
+# meeting" vs "hike by the October meeting" is now a derivable 2-hop bound
+# that was never directly authored anywhere (see pmm_data.difference_graph).
+CUMULATIVE_HIKE_BY_DATE_EVENT_ID = "329566"
+CUMULATIVE_MONTH_TO_MEETING_EVENT_ID = {
+    "september": "481717",
+    "october": "606422",
+}
+CUMULATIVE_MONTH_ORDER = ("september", "october")  # chronological -- later implies earlier
+
 
 def load_config(path: Path = DEFAULT_CONFIG_PATH) -> list[dict]:
     return json.loads(Path(path).read_text())
@@ -71,6 +88,8 @@ def build_yes_no_constraint_set(config: list[dict]) -> ConstraintSet:
 def build_constraint_set(config: list[dict]) -> ConstraintSet:
     groups = []
     for event in config:
+        if event["event_id"] == CUMULATIVE_HIKE_BY_DATE_EVENT_ID:
+            continue  # cumulative markets, not mutually-exclusive outcomes -- see constant's comment
         market_ids = tuple(m["condition_id"] for m in event["markets"])
         if len(market_ids) >= 2:
             groups.append(NegativeRiskGroup(name=event["event_slug"], market_ids=market_ids))
@@ -88,5 +107,39 @@ def build_constraint_set(config: list[dict]) -> ConstraintSet:
                     superset_id=hike_2026_market,
                     subset_id=m["condition_id"],
                 ))
+
+    cumulative_event = next((e for e in config if e["event_id"] == CUMULATIVE_HIKE_BY_DATE_EVENT_ID), None)
+    if cumulative_event is not None:
+        cumulative_by_month: dict[str, str] = {}
+        for m in cumulative_event["markets"]:
+            for month in CUMULATIVE_MONTH_TO_MEETING_EVENT_ID:
+                if month in m["question"].lower():
+                    cumulative_by_month[month] = m["condition_id"]
+
+        for month, meeting_event_id in CUMULATIVE_MONTH_TO_MEETING_EVENT_ID.items():
+            cum_id = cumulative_by_month.get(month)
+            meeting_event = next((e for e in config if e["event_id"] == meeting_event_id), None)
+            if cum_id is None or meeting_event is None:
+                continue
+            for m in meeting_event["markets"]:
+                if "increase" in m["question"].lower():
+                    monotone.append(MonotoneConstraint(
+                        name=f"{meeting_event['event_slug']}__implies__hike_by_{month}",
+                        superset_id=cum_id,
+                        subset_id=m["condition_id"],
+                    ))
+            monotone.append(MonotoneConstraint(
+                name=f"hike_by_{month}__implies__fed_hike_2026",
+                superset_id=hike_2026_market,
+                subset_id=cum_id,
+            ))
+
+        ordered = [(m, cumulative_by_month[m]) for m in CUMULATIVE_MONTH_ORDER if m in cumulative_by_month]
+        for (earlier_month, earlier_id), (later_month, later_id) in zip(ordered, ordered[1:]):
+            monotone.append(MonotoneConstraint(
+                name=f"hike_by_{earlier_month}__implies__hike_by_{later_month}",
+                superset_id=later_id,
+                subset_id=earlier_id,
+            ))
 
     return ConstraintSet(negative_risk_groups=groups, monotone_constraints=monotone)

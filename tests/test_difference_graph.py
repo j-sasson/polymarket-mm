@@ -137,13 +137,14 @@ class TestDerivedBoundCheckerWithViolationTracker(unittest.TestCase):
 
 
 class TestAgainstRealConfig(unittest.TestCase):
-    def test_real_constraint_set_is_a_star_with_no_chains_yet(self):
-        """Honesty check against our actual live topology: six monotone
-        edges, all from a single meeting-hike bucket into the one shared
-        yearly-hike node. No multi-hop paths exist yet, so this correctly
-        finds nothing extra beyond direct pairwise checks -- it's armed
-        for when a chainable constraint gets added, not claiming a result
-        it doesn't have."""
+    def test_real_constraint_set_now_has_a_genuine_chain(self):
+        """The cumulative 'Fed Rate Hike by <Month> Meeting?' markets
+        (added specifically to give this graph something real to chain
+        through) connect the meeting-bucket star to each other: a meeting's
+        specific hike bucket -> that month's cumulative "hike by" market ->
+        the next tracked month's cumulative market -> the yearly market.
+        This is a real, structural change from the original star topology,
+        not a synthetic example -- confirmed against the live config."""
         config = load_config()
         constraint_set = build_constraint_set(config)
         graph = DifferenceGraph(constraint_set)
@@ -153,7 +154,7 @@ class TestAgainstRealConfig(unittest.TestCase):
             (i, j) for i in graph.nodes for j in graph.nodes
             if i != j and (graph.hop_count(i, j) or 0) >= 2
         ]
-        self.assertEqual(multi_hop_pairs, [])
+        self.assertGreater(len(multi_hop_pairs), 0)
 
 
 if __name__ == "__main__":
