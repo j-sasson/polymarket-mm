@@ -167,6 +167,7 @@
         0.041,
         0.0335,
         0.035,
+        0.0345,
         0.0345
       ]
     },
@@ -225,7 +226,8 @@
         0.0925,
         0.084,
         0.0695,
-        0.0665
+        0.0665,
+        0.088
       ]
     },
     "fed-decision-in-december-20260729232808632|0xf17ad24eb4ad57926495b114149c765b9b95bc286eadc91cbbfa901ceb10d0b8|0xb9aee520bf51ac5f00b5c43e54ef9245bc9fcdef866ce8a33025f9a441cc651d|0x723822eb2b143cee54c0bd7c1efba322b21f0051984c266df8879c394f1011c0|0x8a4196617dcb703e49d9bb36d3847bf6a75fd364dbd19f8d408ac944bf1a03d8|0xa5f8a44504de30fa36fff2406b2b27b3d15476ed50448e4fc3ead4861d8a5e3e": {
@@ -242,23 +244,11 @@
       "magnitudes": [
         0.031,
         0.0275,
-        0.028
-      ]
-    },
-    "fed-decision-in-september-762__implies__hike_by_september|0x73d8a8208d23a74937d114a713d6a56cd4161a1068056c52ac74c8419c99da7c|0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d": {
-      "start_time": 1788543883.2967489,
-      "constraint_name": "fed-decision-in-september-762__implies__hike_by_september",
-      "constraint_type": "monotonicity",
-      "market_ids": [
-        "0x73d8a8208d23a74937d114a713d6a56cd4161a1068056c52ac74c8419c99da7c",
-        "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d"
-      ],
-      "magnitudes": [
-        0.02,
-        0.01
+        0.028,
+        0.0295
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1788551676
+  "last_trade_poll_epoch": 1788559411
 }
