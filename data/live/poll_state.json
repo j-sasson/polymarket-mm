@@ -163,6 +163,7 @@
         0.0415,
         0.045,
         0.045,
+        0.041,
         0.041
       ]
     },
@@ -217,7 +218,8 @@
         0.169,
         0.089,
         0.146,
-        0.093
+        0.093,
+        0.0925
       ]
     },
     "fed-decision-in-october-20260617190323537|0x12aa13b3da17ceae1b0a59b5d5b77121e91bb79b4bb0b52bf6543ed3f8d0953b|0xa69ef420d8b4075ad8ba8611d02c63cb2ece46f5c8c643af223c272689b0c96f|0xdf9bf27ee5757c55b44b8b9826ddc9ec3a8809aa3278634c45edbb7fc8f1a3e3|0x9cf563d7b55aa9aa876d5d7e55126347eee473f0ae56d799e325fdef2bf25297|0xde5d75ab7702875623ba509bc923241e1211da74a113521b3b70ddac930d7316": {
@@ -249,25 +251,11 @@
         0.029,
         0.0275,
         0.0275,
-        0.026
-      ]
-    },
-    "fed-decision-in-september-762|0x5e464d85eb49f22d876f3ed6168a7db5e2288e9ae1eb91effd2758e994676f86|0xac02cbb049e46d6a3627c0fdf52fa554982a9025d45968207b362acb6ca4b830|0xa3b36b2d6104d34af4e6c6215fc818e43352e78a748fbfb0b85e3a35f71dec9a|0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d|0x2e4b58fc18dbffd74d5275d89fb076943f21992763c45dcadd81391b83bde13c": {
-      "start_time": 1788501203.569839,
-      "constraint_name": "fed-decision-in-september-762",
-      "constraint_type": "negative_risk",
-      "market_ids": [
-        "0x5e464d85eb49f22d876f3ed6168a7db5e2288e9ae1eb91effd2758e994676f86",
-        "0xac02cbb049e46d6a3627c0fdf52fa554982a9025d45968207b362acb6ca4b830",
-        "0xa3b36b2d6104d34af4e6c6215fc818e43352e78a748fbfb0b85e3a35f71dec9a",
-        "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d",
-        "0x2e4b58fc18dbffd74d5275d89fb076943f21992763c45dcadd81391b83bde13c"
-      ],
-      "magnitudes": [
-        0.0235
+        0.026,
+        0.022
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1788501203
+  "last_trade_poll_epoch": 1788517752
 }
