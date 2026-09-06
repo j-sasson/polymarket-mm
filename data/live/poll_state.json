@@ -180,6 +180,7 @@
         0.041,
         0.0415,
         0.042,
+        0.0415,
         0.0415
       ]
     },
@@ -251,7 +252,8 @@
         0.0835,
         0.0545,
         0.097,
-        0.1355
+        0.1355,
+        0.076
       ]
     },
     "fed-decision-in-september-762__implies__hike_by_september|0x73d8a8208d23a74937d114a713d6a56cd4161a1068056c52ac74c8419c99da7c|0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d": {
@@ -263,10 +265,11 @@
         "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d"
       ],
       "magnitudes": [
+        0.01,
         0.01
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1788686749
+  "last_trade_poll_epoch": 1788699742
 }
