@@ -12,10 +12,11 @@
         "0xde5d75ab7702875623ba509bc923241e1211da74a113521b3b70ddac930d7316"
       ],
       "magnitudes": [
-        0.022
+        0.022,
+        0.03
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1789217965
+  "last_trade_poll_epoch": 1789229355
 }
