@@ -25,10 +25,11 @@
         0.0275,
         0.03,
         0.026,
-        0.033
+        0.033,
+        0.0305
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1789403186
+  "last_trade_poll_epoch": 1789417423
 }
