@@ -31,22 +31,11 @@
         0.032,
         0.035,
         0.023,
-        0.021
-      ]
-    },
-    "fed-decision-in-september-762__implies__hike_by_september|0x73d8a8208d23a74937d114a713d6a56cd4161a1068056c52ac74c8419c99da7c|0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d": {
-      "start_time": 1789491499.9917347,
-      "constraint_name": "fed-decision-in-september-762__implies__hike_by_september",
-      "constraint_type": "monotonicity",
-      "market_ids": [
-        "0x73d8a8208d23a74937d114a713d6a56cd4161a1068056c52ac74c8419c99da7c",
-        "0x876506d8b2bd7a0d3fa4fe18c024eee6e1dd81ee24c26795dadd6cfe4a7b5d0d"
-      ],
-      "magnitudes": [
-        0.005
+        0.021,
+        0.0205
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1789491499
+  "last_trade_poll_epoch": 1789502690
 }
