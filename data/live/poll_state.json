@@ -13,7 +13,8 @@
       ],
       "magnitudes": [
         0.024,
-        0.025
+        0.025,
+        0.031
       ]
     },
     "fed-decision-in-january-20260729233815502|0xfd0fb47daa40f79ed1bd8a0645d028c4583391b70860e4447f93b3b9fe797865|0x0bbe79a986a3f84ea82ebe714159fcfaa488f80df878599e2cd9297ea57ee60f|0xf6e7c89ec4b5d3c887ed9b70dfbcac9392e287367783ce475d32e8c16ed9f61c|0x50642b28be893e8752649e9ae6d687558fc5dcfeeecd10713cf59ef6ea0edce4|0x21cd6160d9de634104b719d50afa4a8ebfa3d0cd10609bf752c77b66f7bbd6a7": {
@@ -29,10 +30,11 @@
       ],
       "magnitudes": [
         0.0335,
-        0.0475
+        0.0475,
+        0.0465
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1789622652
+  "last_trade_poll_epoch": 1789640038
 }
