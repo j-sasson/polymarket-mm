@@ -14,10 +14,11 @@
       "magnitudes": [
         0.0225,
         0.025,
-        0.0285
+        0.0285,
+        0.027
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1791146956
+  "last_trade_poll_epoch": 1791157662
 }
