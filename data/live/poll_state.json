@@ -13,10 +13,11 @@
       ],
       "magnitudes": [
         0.0235,
+        0.0235,
         0.0235
       ]
     }
   },
   "derived_tracker_open_episodes": {},
-  "last_trade_poll_epoch": 1791391533
+  "last_trade_poll_epoch": 1791409497
 }
